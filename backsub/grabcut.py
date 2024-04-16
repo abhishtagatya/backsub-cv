@@ -1,21 +1,16 @@
 import cv2
 import numpy as np
 
-from backsub.util import load_image
+from backsub import BaseBSCV
 
 
-class GrabCutBSCV:
-
-    MODE_MULTIPLY = "multiply"
-    MODE_BITAND = "bitand"
+class GrabCutBSCV(BaseBSCV):
 
     def __init__(self, image, background_image, resize=(720, 400), iterC=3):
-        self.image = load_image(image, resize)
-        self.background_image = load_image(background_image, resize)
-        self.rect = (16, 16, *resize)
-        self.iterC = iterC
+        super(GrabCutBSCV, self).__init__(image, background_image, resize, iterC=iterC)
+        self.rect = (16, 16, *self.resize)
 
-    def process(self, mode=MODE_BITAND):
+    def process(self):
         mask = np.zeros(self.image.shape[:2], np.uint8)
 
         bgdModel = np.zeros((1, 65), np.float64)

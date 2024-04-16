@@ -3,19 +3,15 @@ import numpy as np
 
 from backsub.util import load_image
 
+from backsub import BaseBSCV
 
-class WatershedMaskBSCV:
 
-    MODE_MULTIPLY = "multiply"
-    MODE_BITAND = "bitand"
+class WatershedMaskBSCV(BaseBSCV):
 
     def __init__(self, image, background_image, resize=(720, 400), kSize=(5, 5), iterC=2):
-        self.image = load_image(image, resize)
-        self.background_image = load_image(background_image, resize)
-        self.kSize = kSize
-        self.iterC = iterC
+        super(WatershedMaskBSCV, self).__init__(image, background_image, resize, kSize=kSize, iterC=iterC)
 
-    def process(self, mode=MODE_BITAND):
+    def process(self):
         gray = cv2.cvtColor(self.image, cv2.COLOR_BGR2GRAY)
         _, thresh = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY_INV | cv2.THRESH_OTSU)
 
