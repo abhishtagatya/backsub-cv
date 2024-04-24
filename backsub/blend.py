@@ -15,17 +15,18 @@ def color_balance(image, percent=1):
     # Compute the cumulative distribution function of the L channel
     cdf_l = hist_l.cumsum() / hist_l.sum()
 
-    # Determine the lower and upper bounds for the L channel
-    low_bound = np.percentile(l, percent / 2)
-    high_bound = np.percentile(l, 100 - percent / 2)
+    # Map pixel intensities of the L channel using the CDF
+    mapped_l = np.interp(l.flatten(), np.arange(256), 255 * cdf_l).reshape(l.shape)
 
-    # Clip the L channel to the specified bounds
-    clipped_l = np.clip(l, low_bound, high_bound)
+    # Clip the mapped L channel to the specified bounds
+    low_bound = np.percentile(mapped_l, percent / 2)
+    high_bound = np.percentile(mapped_l, 100 - percent / 2)
+    clipped_l = np.clip(mapped_l, low_bound, high_bound)
 
-    # Scale the clipped L channel to the original range
-    scaled_l = np.uint8(255 * (clipped_l - clipped_l.min()) / (clipped_l.max() - clipped_l.min()))
+    # Convert the adjusted L channel to uint8
+    scaled_l = np.uint8(clipped_l)
 
-    # Merge the balanced L channel with the original A and B channels
+    # Merge the adjusted L channel with the original A and B channels
     balanced_lab_image = cv2.merge((scaled_l, a, b))
 
     # Convert the balanced LAB image back to BGR color space
