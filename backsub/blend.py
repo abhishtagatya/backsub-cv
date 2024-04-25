@@ -64,17 +64,13 @@ def match_histograms(source, target):
     target_hist = cv2.calcHist([target], [0], None, [256], [0, 256])
 
     # Calculate cumulative distribution functions (CDFs)
-    source_cdf = source_hist.cumsum()
-    target_cdf = target_hist.cumsum()
-
-    # Normalize CDFs
-    source_cdf_norm = source_cdf / source_cdf[-1]
-    target_cdf_norm = target_cdf / target_cdf[-1]
+    source_cdf = source_hist.cumsum() / source_hist.sum()
+    target_cdf = target_hist.cumsum() / target_hist.sum()
 
     # Compute the mapping
     mapping = np.zeros(256, dtype=np.uint8)
     for i in range(256):
-        mapping[i] = np.argmin(np.abs(source_cdf_norm - target_cdf_norm[i]))
+        mapping[i] = np.argmin(np.abs(source_cdf - target_cdf[i]))
 
     # Apply the mapping
     matched = mapping[source]
