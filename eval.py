@@ -18,7 +18,7 @@ if __name__ == '__main__':
     parser.add_argument("model", help=f"Model Type", choices=['contourmask', 'grabcut', 'watershed'])
     parser.add_argument("image_path", help=f"Path to Images")
     parser.add_argument("mask_path", help=f"Path to Image Masks")
-    parser.add_argument("background", help=f"Path to Substitute Background")
+    parser.add_argument("backgorund_file", help=f"Path to Substitute Background File")
     args = parser.parse_args()
 
     iou_list = []
@@ -34,14 +34,14 @@ if __name__ == '__main__':
         if args.model == 'contourmask':
             model = ContourMaskBSCV(
                 image=img_path,
-                background_image=args.background,
+                background_image=args.backgorund_file,
                 kSize=(11, 11)
             )
 
         if args.model == 'watershed':
             model = WatershedMaskBSCV(
                 image=img_path,
-                background_image=args.background,
+                background_image=args.backgorund_file,
                 kSize=(11, 11),
                 iterC=3
             )
@@ -49,7 +49,7 @@ if __name__ == '__main__':
         if args.model == 'grabcut':
             model = GrabCutBSCV(
                 image=img_path,
-                background_image=args.background,
+                background_image=args.backgorund_file,
                 iterC=4
             )
 
