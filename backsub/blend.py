@@ -94,7 +94,6 @@ def gradient_mixing(image1, image2, gradient_mask, iterC=3, dimF=0.3):
         dilated_mask = cv2.multiply(dilated_mask, dimF)
         # Apply the dilated mask
         dimmed_mask = cv2.bitwise_or(dimmed_mask, dilated_mask)
-        print(np.unique(dimmed_mask))
 
     # Normalize the gradient mask to range [0, 1]
     gradient_mask = dimmed_mask / 255.0
